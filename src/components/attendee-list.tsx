@@ -6,18 +6,44 @@ import {
   MoreHorizontal,
   Search,
 } from "lucide-react";
+import "dayjs/locale/pt-br";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { IconButton } from "./icon-button";
 import { Table } from "./table/table";
 import { TableHeader } from "./table/table-header";
 import { TableCell } from "./table/table-cell";
 import { TableRow } from "./table/table-row";
 import { ChangeEvent, useState } from "react";
+import { attenddes } from "../data/attendees";
+
+dayjs.locale("pt-br");
+dayjs.extend(relativeTime);
 
 export function AttendeeList() {
   const [valuesSearchInput, setValuesSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.round(attenddes.length / 10)
 
   function onSeachInputChanged(event: ChangeEvent<HTMLInputElement>) {
     setValuesSearchInput(event.target.value);
+  }
+
+  function goToFistPage() {
+    setCurrentPage(1);
+  }
+
+  function goToNextPage() {
+    setCurrentPage(currentPage + 1);
+  }
+
+  function goToPreviousPage() {
+    setCurrentPage(currentPage - 1);
+  }
+
+  function goToLastPage() {
+    setCurrentPage(totalPages);
   }
 
   return (
@@ -53,55 +79,77 @@ export function AttendeeList() {
             </TableRow>
           </thead>
           <tbody>
-            {Array.from({ length: 10 }).map((_, index) => {
-              return (
-                <TableRow
-                  key={index}
-                  className="border-b border-white/10 hover:bg-white/5"
-                >
-                  <TableCell>
-                    <input
-                      type="checkbox"
-                      className="size-4 bg-black/20 rounded border border-white/10 "
-                    />
-                  </TableCell>
-                  <TableCell>1</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <span className="font-semibold text-white">
-                        Best animes cortes
-                      </span>
-                      <span>Best animes cortes@gmail.com</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>7 dias atrás</TableCell>
-                  <TableCell>3 dias atrás</TableCell>
-                  <TableCell>
-                    <IconButton trasparent>
-                      <MoreHorizontal className="size-4" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {attenddes
+              .slice((currentPage - 1) * 10, currentPage * 10)
+              .map((attendee) => {
+                return (
+                  <TableRow
+                    key={attendee.id}
+                    className="border-b border-white/10 hover:bg-white/5"
+                  >
+                    <TableCell>
+                      <input
+                        type="checkbox"
+                        className="size-4 bg-black/20 rounded border border-white/10 "
+                      />
+                    </TableCell>
+                    <TableCell>{attendee.id}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-white">
+                          {attendee.attenddesName}
+                        </span>
+                        <span>{attendee.attenddesEmail}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{dayjs().to(attendee.createAt)}</TableCell>
+                    <TableCell>{dayjs().to(attendee.checkedInAt)}</TableCell>
+                    <TableCell>
+                      <IconButton trasparent>
+                        <MoreHorizontal className="size-4" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </tbody>
           <tfoot>
             <TableRow>
-              <TableCell colSpan={3}>Mostrando 10 de 228 itens</TableCell>
+              <TableCell colSpan={3}>
+                Mostrando 10 de {attenddes.length} itens
+              </TableCell>
               <TableCell colSpan={3} className="text-right">
                 <div className="inline-flex items-center gap-8">
-                  <span>Página 1 de 23</span>
+                  <span>
+                    Página {currentPage} de {totalPages}
+                  </span>
                   <div className="flex gap-1.5">
-                    <IconButton>
+                    <IconButton
+                      disabled={currentPage === 1}
+                      onClick={goToFistPage}
+                    >
                       <ChevronsLeft className="size-4" />
                     </IconButton>{" "}
-                    <IconButton>
+                    <IconButton
+                      disabled={currentPage === 1}
+                      onClick={goToPreviousPage}
+                    >
                       <ChevronLeft className="size-4" />
                     </IconButton>{" "}
-                    <IconButton>
+                    <IconButton
+                      disabled={
+                        currentPage === totalPages
+                      }
+                      onClick={goToNextPage}
+                    >
                       <ChevronRight className="size-4" />
                     </IconButton>{" "}
-                    <IconButton>
+                    <IconButton
+                      disabled={
+                        currentPage === totalPages
+                      }
+                      onClick={goToLastPage}
+                    >
                       <ChevronsRight className="size-4" />
                     </IconButton>
                   </div>
