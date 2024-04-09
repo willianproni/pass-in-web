@@ -1,13 +1,13 @@
-import { ComponentProps } from "react";
+import { Link, LinkProps } from "react-router-dom";
 
-interface NavLinkProps extends ComponentProps<"a"> {
-  children: string;
+interface NavLinkProps extends LinkProps {
+  children: string | JSX.Element;
 }
 
 export function NavLink(props: NavLinkProps) {
   return (
-    <a {...props} className="font-medium text-sm">
+    <Link {...props} className="font-medium text-sm">
       {props.children}
-    </a>
-  );  
+    </Link>
+  );
 }

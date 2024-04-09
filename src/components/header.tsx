@@ -4,11 +4,13 @@ import { NavLink } from "./nav-link";
 export function Header() {
   return (
     <div className="flex items-center gap-5">
-      <img src={nlwUniteIcon} />
+      <NavLink to="/">
+        <img src={nlwUniteIcon} />
+      </NavLink>
 
       <nav className="flex items-center gap-5 py-2">
-        <NavLink href="">Eventos</NavLink>
-        <NavLink href="">Participantes</NavLink>
+        <NavLink to="/">Eventos</NavLink>
+        <NavLink to="/ateendee">Participantes</NavLink>
       </nav>
     </div>
   );
