@@ -54,9 +54,6 @@ export function AttendeeList() {
     return "";
   });
 
-
-  console.log(valuesSearchInput)
-
   const totalPages = Math.ceil(total / 10);
 
   useEffect(() => {

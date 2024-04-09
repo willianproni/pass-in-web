@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-interface EventsProps {
+export interface EventsProps {
   id: string;
   title: string;
   location: string;
